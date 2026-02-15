@@ -1,0 +1,15 @@
+Install the Dependencies
+Run this command to install all the libraries used in your code:
+code
+Bash
+npm install @google/genai lucide-react chart.js react-chartjs-2
+Step D: API Key Configuration
+Since you are running this locally, you need to set your API Key.
+Create a file named .env in the root of your folder.
+Add your key inside it:
+code
+Env
+VITE_API_KEY=your_actual_google_api_key_here
+Important: Vite uses import.meta.env.VITE_API_KEY by default. To make the existing code (which uses process.env.API_KEY)
+
+npm run dev
