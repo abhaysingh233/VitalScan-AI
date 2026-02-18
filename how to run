@@ -1,0 +1,52 @@
+1. install node.js 
+
+2. npm install
+
+3.npm install chart.js react-chartjs-2
+  
+Core React Setup
+npm install react react-dom
+npm install typescript
+
+If using Vite
+npm install vite
+
+Routing
+npm install react-router-dom
+  
+Charts
+npm install chart.js react-chartjs-2
+
+Icons
+npm install lucide-react
+
+AI API (Gemini / OpenAI)
+npm install axios
+
+Camera / Vision
+npm install face-api.js
+
+PDF Generation
+npm install jspdf
+
+Maps
+npm install @react-google-maps/api
+
+Firebase (if used)
+npm install firebase
+
+STEP 4 – Setup Environment File
+
+If your project uses API keys, create:
+
+📁 .env
+
+Example:
+
+VITE_GEMINI_API_KEY=your_api_key
+
+  STEP 5 – Run Project
+
+If using Vite:
+
+npm run dev
