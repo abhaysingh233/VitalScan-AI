@@ -1,0 +1,7 @@
+{
+  "name": "VitalScan AI - Smart Body Care & Treatment Recommendation System",
+  "description": "An interactive healthcare guidance platform using a digital body model and Gemini AI to provide treatment suggestions, preventive care, and specialist recommendations.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}

@@ -1,0 +1,207 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#0ea5e9">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <title>VitalScan AI</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            slate: {
+              850: '#151f32',
+              950: '#020617',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #0ea5e9;
+      --secondary: #6366f1;
+      --hologram: rgba(14, 165, 233, 0.15);
+    }
+    
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+      /* Prevent long-press text selection to feel like an app */
+      user-select: none; 
+      -webkit-user-select: none;
+    }
+
+    /* Allow selection on inputs and paragraphs where needed */
+    input, textarea, p, .selectable {
+      user-select: text;
+      -webkit-user-select: text;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #fcfdfe;
+      color: #1e293b;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      width: 100%;
+      /* Prevent elastic scrolling (bouncing) on iOS */
+      overscroll-behavior-y: none;
+    }
+
+    html.dark body {
+      background-color: #0f172a;
+      color: #f1f5f9;
+    }
+    
+    .app-viewport {
+      min-height: 100vh;
+      /* Account for Safe Area on iPhone X+ */
+      padding-top: env(safe-area-inset-top);
+      padding-bottom: env(safe-area-inset-bottom);
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Physics-based and Holographic Scanner Effects */
+    .hologram-container {
+      position: relative;
+      background: radial-gradient(circle at center, rgba(14, 165, 233, 0.05) 0%, transparent 70%);
+      overflow: hidden;
+    }
+
+    html.dark .hologram-container {
+      background: radial-gradient(circle at center, rgba(14, 165, 233, 0.1) 0%, transparent 70%);
+    }
+
+    .body-anatomy-part {
+      transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+      fill: rgba(226, 232, 240, 0.4);
+      stroke: #cbd5e1;
+      stroke-width: 0.5;
+      cursor: pointer;
+      transform-origin: center;
+    }
+
+    html.dark .body-anatomy-part {
+      fill: rgba(30, 41, 59, 0.6);
+      stroke: #475569;
+    }
+    
+    .body-anatomy-part:hover {
+      fill: rgba(14, 165, 233, 0.2);
+      stroke: #0ea5e9;
+      stroke-width: 1.5;
+      filter: drop-shadow(0 0 8px rgba(14, 165, 233, 0.4));
+      transform: scale(1.03);
+    }
+    
+    .body-anatomy-part.active {
+      fill: rgba(14, 165, 233, 0.5);
+      stroke: #0ea5e9;
+      stroke-width: 2.5;
+      filter: drop-shadow(0 0 15px rgba(14, 165, 233, 0.7));
+      animation: heartbeat 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    }
+
+    /* Idle subtle drift for anatomical parts */
+    .body-anatomy-part.idle-pulse {
+      animation: gentle-drift 8s ease-in-out infinite alternate;
+    }
+
+    @keyframes gentle-drift {
+      0% { opacity: 0.6; }
+      100% { opacity: 0.8; }
+    }
+
+    @keyframes heartbeat {
+      0%, 100% { transform: scale(1); fill-opacity: 0.5; }
+      10% { transform: scale(1.05); fill-opacity: 0.8; }
+      20% { transform: scale(1); fill-opacity: 0.5; }
+    }
+
+    .scanner-hud-line {
+      position: absolute;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #0ea5e9, transparent);
+      box-shadow: 0 0 20px #0ea5e9;
+      z-index: 30;
+      pointer-events: none;
+      animation: scan-loop 5s ease-in-out infinite;
+    }
+
+    @keyframes scan-loop {
+      0% { top: 0%; opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { top: 100%; opacity: 0; }
+    }
+
+    .flicker {
+      animation: flicker 4s steps(1) infinite;
+    }
+
+    @keyframes flicker {
+      0%, 90%, 100% { opacity: 1; }
+      92% { opacity: 0.3; }
+      94% { opacity: 0.8; }
+      96% { opacity: 0.1; }
+    }
+
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+    /* Custom entrance animation for result cards */
+    .result-entrance {
+      animation: slide-up-fade 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes slide-up-fade {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media print {
+      body { background-color: white !important; }
+      header, footer, .no-print, .scanner-hud-line { display: none !important; }
+      .print-only { display: block !important; }
+      .main-content { width: 100% !important; margin: 0 !important; }
+      .dark body { background-color: white !important; color: black !important; }
+    }
+  </style>
+<script type="importmap">
+{
+  "imports": {
+    "lucide-react": "https://esm.sh/lucide-react@^0.563.0",
+    "react/": "https://esm.sh/react@^19.2.4/",
+    "react": "https://esm.sh/react@^19.2.4",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
+    "@google/genai": "https://esm.sh/@google/genai@^1.40.0",
+    "chart.js": "https://esm.sh/chart.js@^4.4.1",
+    "react-chartjs-2": "https://esm.sh/react-chartjs-2@^5.2.0",
+    "@vitejs/plugin-react": "https://esm.sh/@vitejs/plugin-react@^5.1.4",
+    "vite": "https://esm.sh/vite@^7.3.1",
+    "vite-plugin-pwa": "https://esm.sh/vite-plugin-pwa@^1.2.0"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/index.tsx"></script>
+<script type="module" src="/index.tsx"></script>
+</body>
+</html>
